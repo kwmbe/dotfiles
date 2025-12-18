@@ -19,6 +19,12 @@ Scope {
         left: true
         right: true
       }
+
+      margins {
+        left: 4
+        right: 4
+        top: 4
+      }
     
       implicitHeight: 25
     
