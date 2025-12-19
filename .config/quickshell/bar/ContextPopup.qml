@@ -1,5 +1,6 @@
 import Quickshell
 import QtQuick
+import Quickshell.Widgets
 
 Item {
   id: root
@@ -23,16 +24,12 @@ Item {
       anchor.adjustment: PopupAdjustment.FlipY
       color: "white"
 
-      width: contentItem.implicitWidth + contentItem.anchors.margins * 2
-      height: contentItem.implicitHeight + contentItem.anchors.margins * 2
+      implicitWidth: contentItem.implicitWidth + 8
+      implicitHeight: contentItem.implicitHeight + 8
 
-      Item {
+      WrapperItem {
         id: contentItem
-        anchors.fill: parent
-        anchors.margins: 4
-
-        implicitWidth: childrenRect.width
-        implicitHeight: childrenRect.height
+        anchors.centerIn: parent
       }
     }
   }

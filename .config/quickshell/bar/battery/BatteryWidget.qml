@@ -101,6 +101,8 @@ Item {
     popupVisible: mouseArea.containsMouse
 
     Text {
+      font.family: "Nunito"
+      font.weight: Font.DemiBold
       anchors.centerIn: parent
       text: getTooltipText()
       color: "black"
