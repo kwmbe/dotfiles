@@ -3,6 +3,8 @@ import Quickshell.Services.UPower
 import QtQuick
 import QtQuick.Controls
 
+import "./../"
+
 Item {
   id: root
   
@@ -20,13 +22,13 @@ Item {
 
     var percentage = battery.percentage
 
-    if (percentage >= 0.9) {
+    if (percentage >= 0.7) {
       return "󰁹"
-    } else if (percentage >= 0.7) {
-      return "󰂀"
     } else if (percentage >= 0.5) {
-      return "󰁾"
+      return "󰂀"
     } else if (percentage >= 0.3) {
+      return "󰁾"
+    } else if (percentage >= 0.2) {
       return "󰁼"
     } else if (percentage >= 0.1) {
       return "󰁺"
@@ -37,10 +39,12 @@ Item {
 
   function getBatteryColor() {
     if (!battery) return "red"
-    
+
     var isCharging = battery.state === UPowerDevice.Charging || battery.state === UPowerDevice.FullyCharged
-    
-    if (percentage < 20 && !isCharging) {
+
+    if (battery.percentage > 0.15 && battery.percentage < 0.25 && !isCharging) {
+      return "darkred"
+    } else if (battery.percentage <= 0.15 && !isCharging) {
       return "red"
     }
     return "black"
@@ -93,9 +97,13 @@ Item {
     hoverEnabled: true
   }
 
-  ToolTip {
-    visible: mouseArea.containsMouse
-    text: getTooltipText()
-    delay: 500
+  ContextPopup {
+    popupVisible: mouseArea.containsMouse
+
+    Text {
+      anchors.centerIn: parent
+      text: getTooltipText()
+      color: "black"
+    }
   }
 }
