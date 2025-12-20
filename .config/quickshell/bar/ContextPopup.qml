@@ -22,14 +22,20 @@ Item {
       anchor.edges: Edges.Bottom | Edges.Right
       anchor.gravity: Edges.Bottom | Edges.Left
       anchor.adjustment: PopupAdjustment.FlipY
-      color: "white"
+      color: "transparent"
 
       implicitWidth: contentItem.implicitWidth + 8
       implicitHeight: contentItem.implicitHeight + 8
 
-      WrapperItem {
-        id: contentItem
-        anchors.centerIn: parent
+      Rectangle {
+        color: "white"
+        anchors.fill: parent
+        radius: 4
+
+        WrapperItem {
+          id: contentItem
+          anchors.centerIn: parent
+        }
       }
     }
   }
