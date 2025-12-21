@@ -16,24 +16,31 @@ Item {
   function getBatteryIcon() {
     if (!battery) return "󰂑"
 
-    if (battery.state === UPowerDeviceState.Charging || battery.state === UPowerDeviceState.FullyCharged) {
-      return "󰂄"
-    }
+    var charging = battery.state === UPowerDeviceState.Charging || battery.state === UPowerDeviceState.FullyCharged
+    var percentage = battery.percentage * 100
 
-    var percentage = battery.percentage
-
-    if (percentage >= 0.7) {
-      return "󰁹"
-    } else if (percentage >= 0.5) {
-      return "󰂀"
-    } else if (percentage >= 0.3) {
-      return "󰁾"
-    } else if (percentage >= 0.2) {
-      return "󰁼"
-    } else if (percentage >= 0.1) {
-      return "󰁺"
+    if (percentage > 95) {
+      return charging ? "󰂅" : "󰁹"
+    } else if (percentage > 85) {
+      return charging ? "󰂋" : "󰂂"
+    } else if (percentage > 75) {
+      return charging ? "󰂊" : "󰂁"
+    } else if (percentage > 65) {
+      return charging ? "󰢞" : "󰂀"
+    } else if (percentage > 55) {
+      return charging ? "󰂉" : "󰁿"
+    } else if (percentage > 45) {
+      return charging ? "󰢝" : "󰁾"
+    } else if (percentage > 35) {
+      return charging ? "󰂈" : "󰁽"
+    } else if (percentage > 25) {
+      return charging ? "󰂇" : "󰁼"
+    } else if (percentage > 15) {
+      return charging ? "󰂆" : "󰁻"
+    } else if (percentage > 5) {
+      return charging ? "󰢜" : "󰁺"
     } else {
-      return "󰂎"
+      return charging ? "󰢟" : "󰂎"
     }
   }
 

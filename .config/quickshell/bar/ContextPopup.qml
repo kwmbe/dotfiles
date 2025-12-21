@@ -5,8 +5,9 @@ import Quickshell.Widgets
 Item {
   id: root
 
-  implicitWidth:  16
-  implicitHeight: 16
+  anchors.centerIn: parent
+  implicitWidth:    25
+  implicitHeight:   25
 
   // children go here
   default property alias content: contentItem.children
