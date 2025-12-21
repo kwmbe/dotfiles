@@ -10,6 +10,7 @@ import "./battery/"
 import "./tray/"
 import "./workspace/"
 import "./wifi/"
+import "./volume/"
 
 import "."
 
@@ -67,9 +68,11 @@ Scope {
 
         TrayWidget { }
 
-        BatteryWidget { }
+        VolumeWidget { }
 
         WifiWidget { }
+
+        BatteryWidget { }
       }
     
       ClockWidget {
