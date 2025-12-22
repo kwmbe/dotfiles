@@ -14,21 +14,22 @@ Item {
   property int strength: 0
   property string network: ""
 
+  property bool isGSM:        false
   property bool viewNetworks: false
 
   function getWifiIcon() {
-    if (!network) return "󰤭"
+    if (!network) return isGSM ? "󰣼" : "󰤭"
 
     if (strength >= 90) {
-      return "󰤨"
+      return isGSM ? "󰣺" : "󰤨"
     } else if (strength >= 70) {
-      return "󰤥"
+      return isGSM ? "󰣸" : "󰤥"
     } else if (strength >= 40) {
-      return "󰤢"
+      return isGSM ? "󰣶" : "󰤢"
     } else if (strength >= 10) {
-      return "󰤟"
+      return isGSM ? "󰣴" : "󰤟"
     } else {
-      return "󰤯"
+      return isGSM ? "󰣾" : "󰤯"
     }
   }
 
@@ -37,10 +38,27 @@ Item {
   }
 
   Process {
+    id: getActiveConnections
+    command: ["sh", "-c", "nmcli -t -f TYPE,STATE con show --active | grep ':activated$' | head -n1 | cut -d: -f1"]
+    running: true
+    stdout: StdioCollector {
+      onStreamFinished: {
+        var type = this.text.trim()
+        if (type == "802-11-wireless") root.isGSM = false
+        if (type == "gsm") root.isGSM = true
+        setStrength.running = true
+        setNetwork.running = true
+      }
+    }
+  }
+
+  Process {
     id: setStrength
     // use mmcli or qmicli for modem
-    command: ["sh", "-c", "nmcli -f IN-USE,SIGNAL device wifi|grep '*'|grep -o '[0-9]*'"]
-    running: true
+    command: ["sh", "-c", isGSM
+      ? "mmcli -m 0 | grep 'signal quality' | grep -o '[0-9]*'"
+      : "nmcli -f IN-USE,SIGNAL device wifi | grep '*' | grep -o '[0-9]*'"]
+    running: false
     stdout: StdioCollector {
       onStreamFinished: root.strength = this.text.trim()
     }
@@ -48,8 +66,10 @@ Item {
 
   Process {
     id: setNetwork
-    command: ["sh", "-c", "nmcli -t -f active,ssid dev wifi | grep '^yes' | cut -d: -f2"]
-    running: true
+    command: ["sh", "-c",  isGSM
+      ? "mmcli -m 0 | grep 'operator name' | cut -d: -f2"
+      : "nmcli -t -f active,ssid dev wifi | grep '^yes' | cut -d: -f2"]
+    running: false
     stdout: StdioCollector {
       onStreamFinished: root.network = this.text.trim()
     }
@@ -61,8 +81,7 @@ Item {
     repeat: true
 
     onTriggered: {
-      setStrength.running = true
-      setNetwork.running = true
+      getActiveConnections.running = true
     }
   }
 
