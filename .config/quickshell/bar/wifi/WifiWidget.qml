@@ -12,6 +12,7 @@ Item {
   implicitHeight: wifiText.implicitHeight
 
   property int strength: 0
+  property int gsmIndex: 0
   property string network: ""
 
   property bool isGSM:        false
@@ -44,8 +45,26 @@ Item {
     stdout: StdioCollector {
       onStreamFinished: {
         var type = this.text.trim()
-        if (type == "802-11-wireless") root.isGSM = false
-        if (type == "gsm") root.isGSM = true
+        if (type == "802-11-wireless") {
+          root.isGSM = false
+          setStrength.running = true
+          setNetwork.running = true
+        }
+        else if (type == "gsm") {
+          root.isGSM = true
+          getGSMIndex.running = true
+        }
+      }
+    }
+  }
+
+  Process {
+    id: getGSMIndex
+    command: ["sh", "-c", "mmcli -L | grep -o '/Modem/[0-9]*' | grep -o '[0-9]*'"]
+    running: false
+    stdout: StdioCollector {
+      onStreamFinished: {
+        root.gsmIndex = this.text.trim()
         setStrength.running = true
         setNetwork.running = true
       }
@@ -56,7 +75,7 @@ Item {
     id: setStrength
     // use mmcli or qmicli for modem
     command: ["sh", "-c", isGSM
-      ? "mmcli -m 0 | grep 'signal quality' | grep -o '[0-9]*'"
+      ? "mmcli -m " + root.gsmIndex + " | grep 'signal quality' | grep -o '[0-9]*'"
       : "nmcli -f IN-USE,SIGNAL device wifi | grep '*' | grep -o '[0-9]*'"]
     running: false
     stdout: StdioCollector {
@@ -67,7 +86,7 @@ Item {
   Process {
     id: setNetwork
     command: ["sh", "-c",  isGSM
-      ? "mmcli -m 0 | grep 'operator name' | cut -d: -f2"
+      ? "mmcli -m " + root.gsmIndex + " | grep 'operator name' | cut -d: -f2"
       : "nmcli -t -f active,ssid dev wifi | grep '^yes' | cut -d: -f2"]
     running: false
     stdout: StdioCollector {
