@@ -55,7 +55,7 @@ PROMPT='%(?.%F{014}.%F{196})%f%B%F{016}%(?.%K{014}%1~%k.%K{196}%?%k)%f%b%(?.%
 RPROMPT='%(?.%F{014}.%F{196})%f%B%F{016}%(?.%K{014}.%K{196})%(.$(git_prompt).%T.)%k%f%b%(?.%F{014}.%F{196})%f'
 
 # vulkan development
-# source ~/Development/vulkan-1.4.328.1/setup-env.sh
+source ~/Development/vulkan-1.4.328.1/setup-env.sh
 
 alias dots='/usr/bin/git --git-dir=$HOME/Documents/dotfiles/ --work-tree=$HOME'
 
@@ -65,3 +65,18 @@ if [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.z
 elif [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
     source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
+
+# 10 minutes timeout
+TMOUT=600
+
+TRAPALRM() {
+  # only do anything if there's no prompt
+  [[ -o interactive ]] || return
+  [[ -n ${BUFFER-} ]] && return
+
+  # command for screensaver
+  # edited pipes.sh to not clear screen buffer
+  pipes.sh
+
+  zle reset-prompt
+}
