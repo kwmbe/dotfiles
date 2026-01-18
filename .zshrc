@@ -43,6 +43,17 @@ alias more=less
 alias NOW!='systemctl poweroff'
 alias cls='clear'
 
+# forgot where I got this from, but thanks surface-linux community!
+ltefix(){
+  readonly CDC_NCM_DIR=/sys/bus/usb/devices/2-3/2-3:1.0/net/wwp0s20f0u3/cdc_ncm
+  
+  for val in 16383 16384; do
+      for max in rx_max tx_max; do
+          echo "$val" | sudo tee "${CDC_NCM_DIR}/${max}"
+      done
+  done
+}
+
 weather() {
   curl 'wttr.in/'"$*"'?0' --silent --max-time 3
 }
@@ -80,3 +91,10 @@ TRAPALRM() {
 
   zle reset-prompt
 }
+
+# bun completions
+[ -s "/home/salt/.bun/_bun" ] && source "/home/salt/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
