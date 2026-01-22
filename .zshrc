@@ -27,6 +27,8 @@ setopt HIST_FIND_NO_DUPS
 setopt HIST_SAVE_NO_DUPS
 setopt PROMPT_SUBST
 
+ZLE_RPROMPT_INDENT=0
+
 bindkey '^H'  backward-kill-word
 bindkey ';5D' backward-word
 bindkey ';5C' forward-word
