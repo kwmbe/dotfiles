@@ -8,8 +8,8 @@ import "./../"
 Item {
   id: root
   
-  implicitWidth: wifiText.implicitWidth + 10
-  implicitHeight: wifiText.implicitHeight
+  implicitWidth: 25
+  implicitHeight: 25
 
   property int strength: 0
   property int gsmIndex: 0

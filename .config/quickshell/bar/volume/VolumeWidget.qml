@@ -9,8 +9,8 @@ import "./../"
 Item {
   id: root
   
-  implicitWidth: volumeText.implicitWidth + 10
-  implicitHeight: volumeText.implicitHeight
+  implicitWidth: 25
+  implicitHeight: 25
 
   property PwNode sink: Pipewire.defaultAudioSink
   

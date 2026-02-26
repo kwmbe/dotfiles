@@ -15,9 +15,14 @@ Item {
 
   RowLayout {
     id: rowLayout
-    spacing: 10
-    layoutDirection: Qt.LeftToRight
-    anchors.fill: parent
+    spacing: 9 // 9 + 16 = 25
+    layoutDirection: Qt.RightToLeft
+
+    anchors {
+      right: parent.right
+      rightMargin: 4
+      verticalCenter: parent.verticalCenter
+    }
 
     Repeater {
       model: SystemTray.items;
@@ -29,14 +34,6 @@ Item {
 	  		Layout.preferredHeight: 16
 
         color: "transparent"
-
-        // ContextPopup {
-        //   popupVisible: mouseArea.containsMouse
-        //   Text { text: "I'm visible!" }
-        //   // TrayTooltip {
-        //   //   id: menu
-        //   // }
-        // }
 
         QsMenuAnchor {
           id: menuAnchor

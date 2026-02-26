@@ -8,8 +8,8 @@ import "./../"
 Item {
   id: root
   
-  implicitWidth: batteryText.implicitWidth + 10
-  implicitHeight: batteryText.implicitHeight
+  implicitWidth: 25
+  implicitHeight: 25
 
   property var battery: UPower.displayDevice
 
@@ -78,11 +78,11 @@ Item {
     
     if (battery.state === UPowerDeviceState.Charging) {
       if (battery.timeToFull > 0) {
-        tooltipText += " - " + formatTime(battery.timeToFull) + " until full"
+        tooltipText += " · " + formatTime(battery.timeToFull) + " until full"
       }
     } else if (battery.state === UPowerDeviceState.Discharging) {
       if (battery.timeToEmpty > 0) {
-        tooltipText += " - " + formatTime(battery.timeToEmpty) + " remaining"
+        tooltipText += " · " + formatTime(battery.timeToEmpty) + " remaining"
       }
     }
     

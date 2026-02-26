@@ -23,7 +23,7 @@ Item {
       Rectangle {
         id: item
 
-	  		Layout.preferredWidth:  26
+	  		Layout.preferredWidth:  25
 	  		Layout.preferredHeight: 16
 
         color: "transparent"

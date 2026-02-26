@@ -40,11 +40,11 @@ Scope {
 
       RowLayout {
         layoutDirection: Qt.RightToLeft
-        spacing: 10
+        spacing: 0
 
         anchors {
           left: parent.left
-          leftMargin: 10
+          leftMargin: 4
           verticalCenter: parent.verticalCenter
         }
 
@@ -53,18 +53,13 @@ Scope {
 
       RowLayout {
         layoutDirection: Qt.LeftToRight
-        spacing: 10
+        spacing: 0
 
         anchors {
           right: parent.right
-          rightMargin: 10
+          rightMargin: 4
           verticalCenter: parent.verticalCenter
         }
-
-        // ContextPopup {
-        //   popupVisible: true
-        //   Text { text: "test" }
-        // }
 
         TrayWidget { }
 
