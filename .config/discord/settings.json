@@ -12,7 +12,9 @@
   "WINDOW_BOUNDS": {
     "x": 0,
     "y": 0,
-    "width": 1093,
-    "height": 707
-  }
+    "width": 1089,
+    "height": 694
+  },
+  "asyncVideoInputDeviceInit": false,
+  "openH264Enabled": true
 }

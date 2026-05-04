@@ -1,76 +1,159 @@
 import Quickshell
 import QtQuick
-import QtQuick.Controls
-import Quickshell.Services.SystemTray;
+import Quickshell.Services.SystemTray
 import QtQuick.Layouts
-
 import "."
 import "./.."
 
 Item {
   id: root
 
-  implicitWidth:  rowLayout.implicitWidth
-  implicitHeight: rowLayout.implicitHeight
+  property bool expanded: false
 
-  RowLayout {
-    id: rowLayout
-    spacing: 9 // 9 + 16 = 25
-    layoutDirection: Qt.RightToLeft
+  implicitWidth: 25
+  implicitHeight: 25
 
-    anchors {
-      right: parent.right
-      rightMargin: 4
-      verticalCenter: parent.verticalCenter
+  ContextPopup {
+    id: trayPopup
+
+    anchors.centerIn: parent
+    popupVisible: root.expanded
+
+    RowLayout {
+      id: trayIcons
+
+      spacing: 9
+      layoutDirection: Qt.RightToLeft
+
+      Repeater {
+        model: SystemTray.items
+
+        Rectangle {
+          id: item
+
+          Layout.preferredWidth: 16
+          Layout.preferredHeight: 16
+          color: "transparent"
+
+          QsMenuAnchor {
+            id: menuAnchor
+
+            anchor.item: item
+            anchor.gravity: Edges.Bottom | Edges.Left
+            menu: modelData.menu
+          }
+
+          MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+            onClicked: event => {
+              switch (event.button) {
+                case Qt.LeftButton:
+                modelData.activate()
+                root.expanded = false
+                break
+                case Qt.RightButton:
+                menuAnchor.open()
+                break
+              }
+
+              event.accepted = true
+            }
+          }
+
+          Image {
+            width: parent.width
+            height: parent.height
+            antialiasing: true
+
+            source: modelData.icon
+            sourceSize.width: width
+            sourceSize.height: height
+
+            anchors.centerIn: parent
+          }
+        }
+      }
+    }
+  }
+
+  Rectangle {
+    id: chevronButton
+
+    anchors.fill: parent
+    color: mouseArea.containsMouse ? "#16000000" : "transparent"
+    radius: 4
+
+    MouseArea {
+      id: mouseArea
+
+      anchors.fill: parent
+      hoverEnabled: true
+      acceptedButtons: Qt.LeftButton
+      cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor
+
+      onClicked: {
+        root.expanded = !root.expanded
+      }
     }
 
-    Repeater {
-      model: SystemTray.items;
+    Item {
+      width: 13
+      height: 9
+      anchors.centerIn: parent
 
       Rectangle {
-        id: item
+        width: 8
+        height: 2
+        radius: 8
+        color: "#222222"
+        antialiasing: true
 
-	  		Layout.preferredWidth:  16
-	  		Layout.preferredHeight: 16
+        x: 0
+        y: 4
+        rotation: root.expanded ? -35 : 35
 
-        color: "transparent"
-
-        QsMenuAnchor {
-          id: menuAnchor
-          anchor.item: item
-          anchor.gravity: Edges.Bottom | Edges.Left
-          menu: modelData.menu
-        }
-
-        MouseArea {
-          id: mouseArea
-
-          hoverEnabled: true
-          anchors.fill: parent
-          acceptedButtons: Qt.LeftButton | Qt.RightButton
-          onClicked: (event) => {
-            console.log(event)
-            switch (event.button) {
-              case Qt.LeftButton:
-                  modelData.activate();
-                  break;
-              case Qt.RightButton:
-                  menuAnchor.open()
-                  break;
-            }
-            event.accepted = true;
+        Behavior on rotation {
+          NumberAnimation {
+            duration: 160
+            easing.type: Easing.InOutQuad
           }
         }
 
-        Image {
-	  	  	 width:             parent.width
-	  	  	 height:            parent.height
-	  	  	 antialiasing:      true
-	  	  	 source:            modelData.icon
-	  	  	 sourceSize.width:  width
-	  	  	 sourceSize.height: height
-           anchors.centerIn:  parent
-	  	  }
+        Behavior on y {
+          NumberAnimation {
+            duration: 160
+            easing.type: Easing.InOutQuad
+          }
+        }
+      }
+
+      Rectangle {
+        width: 8
+        height: 2
+        radius: 1
+        color: "#222222"
+        antialiasing: true
+
+        x: 5
+        y: 4
+        rotation: root.expanded ? 35 : -35
+
+        Behavior on rotation {
+          NumberAnimation {
+            duration: 160
+            easing.type: Easing.InOutQuad
+          }
+        }
+
+        Behavior on y {
+          NumberAnimation {
+            duration: 160
+            easing.type: Easing.InOutQuad
+          }
+        }
       }
     }
   }
