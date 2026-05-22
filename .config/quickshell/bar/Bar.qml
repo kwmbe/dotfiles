@@ -5,12 +5,18 @@ import QtQuick.Layouts
 
 import Quickshell.Services.SystemTray
 
-import "./clock/"
-import "./battery/"
-import "./tray/"
 import "./workspace/"
-import "./wifi/"
+
+import "./clock/"
+
+import "./tray/"
 import "./volume/"
+import "./wifi/"
+import "./battery/"
+
+import "./osk/"
+import "./rotate/"
+import "./notifications/"
 
 import "."
 
@@ -68,6 +74,12 @@ Scope {
         WifiWidget { }
 
         BatteryWidget { }
+
+        OnScreenKeyboardWidget { }
+
+        ScreenRotationWidget { }
+
+        NotificationCenter { }
       }
     
       ClockWidget {
