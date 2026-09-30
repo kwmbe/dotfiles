@@ -1,12 +1,11 @@
-
 # The following lines were added by compinstall
-
 zstyle ':completion:*' completer _complete _ignored _approximate
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}'
 zstyle :compinstall filename '/home/salt/.zshrc'
 
 autoload -Uz compinit
+autoload -Uz tetriscurses
 compinit
 # End of lines added by compinstall
 # Lines configured by zsh-newuser-install
@@ -18,13 +17,14 @@ unsetopt beep extendedglob nomatch notify
 bindkey -e
 # End of lines configured by zsh-newuser-install
 
-setopt share_history
+setopt SHARE_HISTORY
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_FIND_NO_DUPS
 setopt HIST_SAVE_NO_DUPS
+setopt AUTO_CD
 setopt PROMPT_SUBST
 
 ZLE_RPROMPT_INDENT=0
@@ -35,15 +35,21 @@ bindkey ';5C' forward-word
 bindkey ';3D' backward-word
 bindkey ';3C' forward-word
 
-alias la='ls -a --color=auto'
+alias la='ls -A --color=auto'
 alias ll='ls -la --color=auto'
 alias ls='ls --color=auto'
 
 alias grep='grep --color -i'
 alias more=less
-# alias NOW!='shutdown now'
+# alias NOW!='shutdown -s -t 0'
 alias NOW!='systemctl poweroff'
-alias cls='clear'
+
+dots=..; up=..
+for i in {2..9}; do
+  dots+=.; up+=/..
+  alias "$dots"="cd $up"
+done
+unset dots up i;
 
 # forgot where I got this from, but thanks surface-linux community!
 ltefix(){
@@ -54,6 +60,14 @@ ltefix(){
           echo "$val" | sudo tee "${CDC_NCM_DIR}/${max}"
       done
   done
+}
+
+hist () {
+  fc -ln 0 | grep "$*"
+}
+
+api() {
+  curl -S 'https://api.ipapi.is/?q='"$*" --silent --max-time 3
 }
 
 weather() {
@@ -70,7 +84,14 @@ RPROMPT='%(?.%F{014}.%F{196})%f%B%F{016}%(?.%K{014}.%K{196})%(.$(git_prompt).
 # vulkan development
 source ~/Development/vulkan-1.4.328.1/setup-env.sh
 
-alias dots='/usr/bin/git --git-dir=$HOME/Documents/dotfiles/ --work-tree=$HOME'
+# bun completions
+[ -s "/home/salt/.bun/_bun" ] && source "/home/salt/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+alias dots='/usr/bin/git --git-dir=$HOME/Projects/dotfiles/ --work-tree=$HOME'
 
 # zsh-syntax-highlighting
 if [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
@@ -79,24 +100,3 @@ elif [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
     source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
-# 10 minutes timeout
-TMOUT=600
-
-TRAPALRM() {
-  # only do anything if there's no prompt
-  [[ -o interactive ]] || return
-  [[ -n ${BUFFER-} ]] && return
-
-  # command for screensaver
-  # edited pipes.sh to not clear screen buffer
-  pipes.sh
-
-  zle reset-prompt
-}
-
-# bun completions
-[ -s "/home/salt/.bun/_bun" ] && source "/home/salt/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
