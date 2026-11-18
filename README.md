@@ -17,3 +17,4 @@ Planned:
  * rofi: Integrate this into quickshell
  * foot: don't think anything needs to change here
  * sway: clean up the config a bit, like my zsh changes.
+ * make use of GNU STOW instead of a bare repo
